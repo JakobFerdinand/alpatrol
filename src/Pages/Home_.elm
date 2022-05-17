@@ -62,5 +62,5 @@ view : Shared.Model -> Model -> View Msg
 view shared model =
     { title = ""
     , attributes = []
-    , body = el [ centerX, centerY ] <| text "Welcome to Alpatrol! 🦙"
+    , body = el [ centerX, centerY ] <| text "Servus bei Alpatrol! 🦙"
     }

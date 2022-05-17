@@ -1,6 +1,6 @@
 module Components.Navbar exposing (view)
 
-import Domain.User exposing (User)
+import Api.User exposing (User)
 import Element exposing (..)
 
 

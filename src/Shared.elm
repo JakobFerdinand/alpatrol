@@ -8,8 +8,8 @@ module Shared exposing
     , view
     )
 
+import Api.User exposing (..)
 import Components.Navbar as Navbar
-import Domain.User exposing (..)
 import Element exposing (..)
 import Request exposing (Request)
 import View exposing (View)
