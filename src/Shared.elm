@@ -70,7 +70,8 @@ view req { page, toMsg } model =
     , attributes = page.attributes
     , body =
         column [ centerX, centerY, width fill, height fill ]
-            [ Navbar.view model.user
+            [ Navbar.view
+                model.user
             , page.body
             ]
     }
