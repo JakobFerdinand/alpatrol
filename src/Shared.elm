@@ -8,8 +8,7 @@ module Shared exposing
     , view
     )
 
-import Html exposing (..)
-import Html.Attributes exposing (class, href, rel)
+import Element exposing (..)
 import Request exposing (Request)
 import View exposing (View)
 
@@ -65,11 +64,9 @@ view :
     -> Model
     -> View msg
 view req { page, toMsg } model =
-    { title =
-        page.title
+    { title = page.title
+    , attributes = page.attributes
     , body =
-        [ div [ class "layout" ]
-            [ div [ class "page" ] page.body
-            ]
-        ]
+        column [ centerX, centerY, width fill, height fill ]
+            [ page.body ]
     }
