@@ -8,6 +8,8 @@ module Shared exposing
     , view
     )
 
+import Components.Navbar as Navbar
+import Domain.User exposing (..)
 import Element exposing (..)
 import Request exposing (Request)
 import View exposing (View)
@@ -22,12 +24,12 @@ type alias Flags =
 
 
 type alias Model =
-    ()
+    { user : Maybe User }
 
 
 init : Request -> Flags -> ( Model, Cmd Msg )
 init _ json =
-    ( ()
+    ( { user = Nothing }
     , Cmd.none
     )
 
@@ -68,5 +70,7 @@ view req { page, toMsg } model =
     , attributes = page.attributes
     , body =
         column [ centerX, centerY, width fill, height fill ]
-            [ page.body ]
+            [ Navbar.view model.user
+            , page.body
+            ]
     }

@@ -10,6 +10,7 @@ module Auth exposing
 
 -}
 
+import Domain.User
 import ElmSpa.Page as ElmSpa
 import Gen.Route exposing (Route)
 import Request exposing (Request)
@@ -19,7 +20,7 @@ import Shared
 {-| Replace the "()" with your actual User type
 -}
 type alias User =
-    ()
+    Domain.User.User
 
 
 {-| This function will run before any `protected` pages.
