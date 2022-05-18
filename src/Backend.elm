@@ -46,7 +46,7 @@ update msg model =
 updateFromFrontend : SessionId -> ClientId -> Types.ToBackend -> Model -> ( Model, Cmd BackendMsg )
 updateFromFrontend sessionId clientId msg model =
     case msg of
-        SigneOut user ->
+        SignedOut user ->
             ( { model | sessions = model.sessions |> Dict.remove sessionId }, Cmd.none )
 
         UserAuthentication_Login { params } ->

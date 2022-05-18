@@ -5,12 +5,14 @@ import Effect exposing (Effect)
 import ElmSpa.Page
 import Gen.Params.Home_
 import Gen.Params.NotFound
+import Gen.Params.Register
 import Gen.Model as Model
 import Gen.Msg as Msg
 import Gen.Route as Route exposing (Route)
 import Page exposing (Page)
 import Pages.Home_
 import Pages.NotFound
+import Pages.Register
 import Request exposing (Request)
 import Shared
 import Task
@@ -34,6 +36,9 @@ init route =
     
         Route.NotFound ->
             pages.notFound.init ()
+    
+        Route.Register ->
+            pages.register.init ()
 
 
 update : Msg -> Model -> Shared.Model -> Url -> Key -> ( Model, Effect Msg )
@@ -57,6 +62,9 @@ view model_ =
     
         Model.NotFound params ->
             pages.notFound.view params ()
+    
+        Model.Register params ->
+            pages.register.view params ()
 
 
 subscriptions : Model -> Shared.Model -> Url -> Key -> Sub Msg
@@ -70,6 +78,9 @@ subscriptions model_ =
     
         Model.NotFound params ->
             pages.notFound.subscriptions params ()
+    
+        Model.Register params ->
+            pages.register.subscriptions params ()
 
 
 
@@ -79,10 +90,12 @@ subscriptions model_ =
 pages :
     { home_ : Bundle Gen.Params.Home_.Params Pages.Home_.Model Pages.Home_.Msg
     , notFound : Static Gen.Params.NotFound.Params
+    , register : Static Gen.Params.Register.Params
     }
 pages =
     { home_ = bundle Pages.Home_.page Model.Home_ Msg.Home_
     , notFound = static Pages.NotFound.view Model.NotFound
+    , register = static Pages.Register.view Model.Register
     }
 
 

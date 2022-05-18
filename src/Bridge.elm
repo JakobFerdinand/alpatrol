@@ -1,14 +1,14 @@
 module Bridge exposing (..)
 
-import Auth exposing (User)
+import Api.User exposing (User)
+import Lamdera
 
 
-
--- In an elm-spa app with Lamdera, the ToBackend type must be in this
--- Bridge file to avoid import cycle issues between generated pages and Types.elm
+sendToBackend =
+    Lamdera.sendToBackend
 
 
 type ToBackend
-    = SigneOut User
+    = SignedOut User
     | UserAuthentication_Login { params : { email : String, password : String } }
     | UserRegistration_Register { params : { username : String, email : String, password : String } }

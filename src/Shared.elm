@@ -9,9 +9,11 @@ module Shared exposing
     )
 
 import Api.User exposing (..)
+import Bridge exposing (..)
 import Components.Navbar as Navbar
 import Element exposing (..)
 import Request exposing (Request)
+import Utils.Route
 import View exposing (View)
 
 
@@ -39,15 +41,15 @@ init _ json =
 
 
 type Msg
-    = Noop
+    = ClickedSignOut
 
 
 update : Request -> Msg -> Model -> ( Model, Cmd Msg )
 update _ msg model =
     case msg of
-        Noop ->
-            ( model
-            , Cmd.none
+        ClickedSignOut ->
+            ( { model | user = Nothing }
+            , model.user |> Maybe.map (\user -> sendToBackend (SignedOut user)) |> Maybe.withDefault Cmd.none
             )
 
 
@@ -71,7 +73,10 @@ view req { page, toMsg } model =
     , body =
         column [ centerX, centerY, width fill, height fill ]
             [ Navbar.view
-                model.user
+                { user = model.user
+                , currentRoute = Utils.Route.fromUrl req.url
+                , onSignOut = toMsg ClickedSignOut
+                }
             , page.body
             ]
     }
