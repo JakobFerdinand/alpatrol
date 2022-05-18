@@ -4,6 +4,7 @@ import Browser.Navigation exposing (Key)
 import Effect exposing (Effect)
 import ElmSpa.Page
 import Gen.Params.Home_
+import Gen.Params.Login
 import Gen.Params.NotFound
 import Gen.Params.Register
 import Gen.Model as Model
@@ -11,6 +12,7 @@ import Gen.Msg as Msg
 import Gen.Route as Route exposing (Route)
 import Page exposing (Page)
 import Pages.Home_
+import Pages.Login
 import Pages.NotFound
 import Pages.Register
 import Request exposing (Request)
@@ -34,6 +36,9 @@ init route =
         Route.Home_ ->
             pages.home_.init ()
     
+        Route.Login ->
+            pages.login.init ()
+    
         Route.NotFound ->
             pages.notFound.init ()
     
@@ -46,6 +51,9 @@ update msg_ model_ =
     case ( msg_, model_ ) of
         ( Msg.Home_ msg, Model.Home_ params model ) ->
             pages.home_.update params msg model
+    
+        ( Msg.Register msg, Model.Register params model ) ->
+            pages.register.update params msg model
 
         _ ->
             \_ _ _ -> ( model_, Effect.none )
@@ -60,11 +68,14 @@ view model_ =
         Model.Home_ params model ->
             pages.home_.view params model
     
+        Model.Login params ->
+            pages.login.view params ()
+    
         Model.NotFound params ->
             pages.notFound.view params ()
     
-        Model.Register params ->
-            pages.register.view params ()
+        Model.Register params model ->
+            pages.register.view params model
 
 
 subscriptions : Model -> Shared.Model -> Url -> Key -> Sub Msg
@@ -76,11 +87,14 @@ subscriptions model_ =
         Model.Home_ params model ->
             pages.home_.subscriptions params model
     
+        Model.Login params ->
+            pages.login.subscriptions params ()
+    
         Model.NotFound params ->
             pages.notFound.subscriptions params ()
     
-        Model.Register params ->
-            pages.register.subscriptions params ()
+        Model.Register params model ->
+            pages.register.subscriptions params model
 
 
 
@@ -89,13 +103,15 @@ subscriptions model_ =
 
 pages :
     { home_ : Bundle Gen.Params.Home_.Params Pages.Home_.Model Pages.Home_.Msg
+    , login : Static Gen.Params.Login.Params
     , notFound : Static Gen.Params.NotFound.Params
-    , register : Static Gen.Params.Register.Params
+    , register : Bundle Gen.Params.Register.Params Pages.Register.Model Pages.Register.Msg
     }
 pages =
     { home_ = bundle Pages.Home_.page Model.Home_ Msg.Home_
+    , login = static Pages.Login.view Model.Login
     , notFound = static Pages.NotFound.view Model.NotFound
-    , register = static Pages.Register.view Model.Register
+    , register = bundle Pages.Register.page Model.Register Msg.Register
     }
 
 

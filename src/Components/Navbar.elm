@@ -18,7 +18,7 @@ view { user, currentRoute, onSignOut } =
     row
         [ alignTop, width fill, spacing 20, padding 20 ]
         [ el [ alignLeft ] <| text "Alpatrol"
-        , row [ alignRight ] <|
+        , row [ alignRight, spacing 10 ] <|
             case user of
                 Just u ->
                     [ el [ Events.onClick onSignOut ] <| text "Logout" ]
@@ -26,6 +26,8 @@ view { user, currentRoute, onSignOut } =
                 Nothing ->
                     List.map (viewLink currentRoute) <|
                         [ ( "Home", Route.Home_ )
+                        , ( "Sign in", Route.Login )
+                        , ( "Sign up", Route.Register )
                         ]
         ]
 

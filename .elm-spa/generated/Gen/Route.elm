@@ -5,6 +5,7 @@ module Gen.Route exposing
     )
 
 import Gen.Params.Home_
+import Gen.Params.Login
 import Gen.Params.NotFound
 import Gen.Params.Register
 import Url exposing (Url)
@@ -13,6 +14,7 @@ import Url.Parser as Parser exposing ((</>), Parser)
 
 type Route
     = Home_
+    | Login
     | NotFound
     | Register
 
@@ -25,6 +27,7 @@ fromUrl =
 routes : List (Parser (Route -> a) a)
 routes =
     [ Parser.map Home_ Gen.Params.Home_.parser
+    , Parser.map Login Gen.Params.Login.parser
     , Parser.map NotFound Gen.Params.NotFound.parser
     , Parser.map Register Gen.Params.Register.parser
     ]
@@ -40,6 +43,9 @@ toHref route =
     case route of
         Home_ ->
             joinAsHref []
+    
+        Login ->
+            joinAsHref [ "login" ]
     
         NotFound ->
             joinAsHref [ "not-found" ]
