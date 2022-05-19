@@ -42,6 +42,7 @@ init _ json =
 
 type Msg
     = ClickedSignOut
+    | SignedInUser User
 
 
 update : Request -> Msg -> Model -> ( Model, Cmd Msg )
@@ -50,6 +51,11 @@ update _ msg model =
         ClickedSignOut ->
             ( { model | user = Nothing }
             , model.user |> Maybe.map (\user -> sendToBackend (SignedOut user)) |> Maybe.withDefault Cmd.none
+            )
+
+        SignedInUser user ->
+            ( { model | user = Just user }
+            , Cmd.none
             )
 
 
@@ -71,12 +77,17 @@ view req { page, toMsg } model =
     { title = page.title
     , attributes = page.attributes
     , body =
-        column [ centerX, centerY, width fill, height fill ]
+        column
+            [ centerX
+            , centerY
+            , width fill
+            , height fill
+            ]
             [ Navbar.view
                 { user = model.user
                 , currentRoute = Utils.Route.fromUrl req.url
                 , onSignOut = toMsg ClickedSignOut
                 }
-            , page.body
+            , el [ width fill, height fill ] <| page.body
             ]
     }

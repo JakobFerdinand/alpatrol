@@ -47,4 +47,5 @@ type BackendMsg
 
 
 type ToFrontend
-    = NoOpToFrontend
+    = ActiveSession User
+    | PageMsg Pages.Msg

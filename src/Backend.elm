@@ -8,6 +8,7 @@ import Dict.Extra as Dict
 import Gen.Msg
 import Lamdera exposing (..)
 import Pages.Home_
+import Pages.Register
 import Task
 import Time
 import Time.Extra as Time
@@ -45,6 +46,10 @@ update msg model =
 
 updateFromFrontend : SessionId -> ClientId -> Types.ToBackend -> Model -> ( Model, Cmd BackendMsg )
 updateFromFrontend sessionId clientId msg model =
+    let
+        send_ v =
+            sendToFrontend clientId v
+    in
     case msg of
         SignedOut user ->
             ( { model | sessions = model.sessions |> Dict.remove sessionId }, Cmd.none )
@@ -72,7 +77,7 @@ updateFromFrontend sessionId clientId msg model =
                         , Success (Api.User.toUser user_)
                         )
             in
-            ( model, Cmd.none )
+            ( model_, Cmd.batch [ cmd, send_ (PageMsg (Gen.Msg.Register (Pages.Register.GotUser res))) ] )
 
 
 renewSession email sid cid =

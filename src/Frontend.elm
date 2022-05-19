@@ -4,7 +4,6 @@ import Browser
 import Browser.Dom
 import Browser.Navigation as Nav exposing (Key)
 import Effect
-import Element
 import Gen.Model
 import Gen.Pages as Pages
 import Gen.Route as Route
@@ -129,8 +128,11 @@ update msg model =
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
 updateFromBackend msg model =
     case msg of
-        NoOpToFrontend ->
-            ( model, Cmd.none )
+        ActiveSession user ->
+            update (Shared <| Shared.SignedInUser user) model
+
+        PageMsg pageMsg ->
+            update (Page pageMsg) model
 
 
 

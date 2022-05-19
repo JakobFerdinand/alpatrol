@@ -2,12 +2,18 @@ module Pages.Register exposing (Model, Msg(..), page)
 
 import Api.Data exposing (Data)
 import Api.User exposing (User)
+import Bridge exposing (..)
+import Components.ErrorList
 import Effect exposing (Effect)
 import Element exposing (..)
+import Element.Border as Border
+import Element.Input as Input
+import Gen.Route as Route
 import Page
 import Request exposing (Request)
 import Shared
-import View exposing (View)
+import Utils.Route
+import View exposing (View, placeholder)
 
 
 page : Shared.Model -> Request -> Page.With Model Msg
@@ -55,6 +61,8 @@ init shared =
 
 type Msg
     = Updated Field String
+    | AttemptedSignUp
+    | GotUser (Data User)
 
 
 type Field
@@ -81,6 +89,33 @@ update req msg model =
             , Effect.none
             )
 
+        AttemptedSignUp ->
+            ( model
+            , (Effect.fromCmd << sendToBackend) <|
+                UserRegistration_Register
+                    { params =
+                        { username = model.username
+                        , email = model.email
+                        , password = model.password
+                        }
+                    }
+            )
+
+        GotUser user ->
+            case Api.Data.toMaybe user of
+                Just user_ ->
+                    ( { model | user = user }
+                    , Effect.batch
+                        [ Effect.fromCmd (Utils.Route.navigate req.key Route.Home_)
+                        , Effect.fromShared (Shared.SignedInUser user_)
+                        ]
+                    )
+
+                Nothing ->
+                    ( { model | user = user }
+                    , Effect.none
+                    )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -91,9 +126,52 @@ subscriptions model =
 -- VIEW
 
 
-view : Model -> View msg
+view : Model -> View Msg
 view model =
     { title = "Sign Up"
     , attributes = []
-    , body = Element.none
+    , body =
+        column [ alignTop, centerX, spacing 10 ]
+            [ text "Sign up"
+            , link []
+                { url = Route.toHref Route.Login
+                , label = text "Have an account?"
+                }
+            , case model.user of
+                Api.Data.Failure reasons ->
+                    Components.ErrorList.view reasons
+
+                _ ->
+                    text ""
+            , column []
+                [ Input.username []
+                    { onChange = Updated Username
+                    , label = Input.labelAbove [] <| text "Your Name"
+                    , placeholder = Nothing
+                    , text = model.username
+                    }
+                , Input.email []
+                    { onChange = Updated Email
+                    , text = model.email
+                    , placeholder = Nothing
+                    , label = Input.labelAbove [] <| text "Email"
+                    }
+                , Input.newPassword []
+                    { onChange = Updated Password
+                    , text = model.password
+                    , placeholder = Nothing
+                    , label = Input.labelAbove [] <| text "Password"
+                    , show = False
+                    }
+                ]
+            , Input.button
+                [ alignRight
+                , Border.width 1
+                , Border.rounded 4
+                , padding 5
+                ]
+                { onPress = Just AttemptedSignUp
+                , label = text "Sign up"
+                }
+            ]
     }
