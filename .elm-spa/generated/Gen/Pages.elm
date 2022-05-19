@@ -52,6 +52,9 @@ update msg_ model_ =
         ( Msg.Home_ msg, Model.Home_ params model ) ->
             pages.home_.update params msg model
     
+        ( Msg.Login msg, Model.Login params model ) ->
+            pages.login.update params msg model
+    
         ( Msg.Register msg, Model.Register params model ) ->
             pages.register.update params msg model
 
@@ -68,8 +71,8 @@ view model_ =
         Model.Home_ params model ->
             pages.home_.view params model
     
-        Model.Login params ->
-            pages.login.view params ()
+        Model.Login params model ->
+            pages.login.view params model
     
         Model.NotFound params ->
             pages.notFound.view params ()
@@ -87,8 +90,8 @@ subscriptions model_ =
         Model.Home_ params model ->
             pages.home_.subscriptions params model
     
-        Model.Login params ->
-            pages.login.subscriptions params ()
+        Model.Login params model ->
+            pages.login.subscriptions params model
     
         Model.NotFound params ->
             pages.notFound.subscriptions params ()
@@ -103,13 +106,13 @@ subscriptions model_ =
 
 pages :
     { home_ : Bundle Gen.Params.Home_.Params Pages.Home_.Model Pages.Home_.Msg
-    , login : Static Gen.Params.Login.Params
+    , login : Bundle Gen.Params.Login.Params Pages.Login.Model Pages.Login.Msg
     , notFound : Static Gen.Params.NotFound.Params
     , register : Bundle Gen.Params.Register.Params Pages.Register.Model Pages.Register.Msg
     }
 pages =
     { home_ = bundle Pages.Home_.page Model.Home_ Msg.Home_
-    , login = static Pages.Login.view Model.Login
+    , login = bundle Pages.Login.page Model.Login Msg.Login
     , notFound = static Pages.NotFound.view Model.NotFound
     , register = bundle Pages.Register.page Model.Register Msg.Register
     }

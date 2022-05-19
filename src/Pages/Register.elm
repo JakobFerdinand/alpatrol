@@ -13,7 +13,7 @@ import Page
 import Request exposing (Request)
 import Shared
 import Utils.Route
-import View exposing (View, placeholder)
+import View exposing (View)
 
 
 page : Shared.Model -> Request -> Page.With Model Msg

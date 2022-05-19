@@ -13,7 +13,7 @@ import Pages.Register
 type Model
     = Redirecting_
     | Home_ Gen.Params.Home_.Params Pages.Home_.Model
-    | Login Gen.Params.Login.Params
+    | Login Gen.Params.Login.Params Pages.Login.Model
     | NotFound Gen.Params.NotFound.Params
     | Register Gen.Params.Register.Params Pages.Register.Model
 

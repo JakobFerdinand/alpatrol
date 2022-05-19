@@ -7,7 +7,7 @@ import Dict
 import Dict.Extra as Dict
 import Gen.Msg
 import Lamdera exposing (..)
-import Pages.Home_
+import Pages.Login
 import Pages.Register
 import Task
 import Time
@@ -55,7 +55,22 @@ updateFromFrontend sessionId clientId msg model =
             ( { model | sessions = model.sessions |> Dict.remove sessionId }, Cmd.none )
 
         UserAuthentication_Login { params } ->
-            ( model, Cmd.none )
+            let
+                ( response, cmd ) =
+                    model.users
+                        |> Dict.find (\k u -> u.email == params.email)
+                        |> Maybe.map
+                            (\( k, u ) ->
+                                if u.password == params.password then
+                                    ( Success (Api.User.toUser u), renewSession u.id sessionId clientId )
+
+                                else
+                                    ( Failure [ "email or password is invalid" ], Cmd.none )
+                            )
+                        |> Maybe.withDefault
+                            ( Failure [ "email or password is invalid" ], Cmd.none )
+            in
+            ( model, Cmd.batch [ send_ (PageMsg (Gen.Msg.Login (Pages.Login.GotUser response))), cmd ] )
 
         UserRegistration_Register { params } ->
             let

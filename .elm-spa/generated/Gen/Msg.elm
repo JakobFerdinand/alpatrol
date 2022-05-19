@@ -12,5 +12,6 @@ import Pages.Register
 
 type Msg
     = Home_ Pages.Home_.Msg
+    | Login Pages.Login.Msg
     | Register Pages.Register.Msg
 
